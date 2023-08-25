@@ -1,0 +1,71 @@
+{
+  "root": true,
+  "env": { "browser": true, "es2020": true },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended"
+    // "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": true,
+    "tsconfigRootDir": "__dirname"
+  },
+  "plugins": ["react-refresh", "prettier", "import"],
+  "rules": {
+    "import/no-unresolved": "error",
+    "react-refresh/only-export-components": [
+      "warn",
+      { "allowConstantExport": true }
+    ],
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "custom": {
+          "regex": "^I[A-Z]",
+          "match": true
+        }
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "comma-dangle": ["warn", "always-multiline"],
+    "react-hooks/exhaustive-deps": "off",
+    "no-useless-concat": "error",
+    "no-useless-return": "error",
+    "no-dupe-class-members": "error",
+    "semi": "error",
+    "no-multi-spaces": "error",
+    "prefer-template": "warn",
+    "curly": ["error", "all"],
+    "eqeqeq": "error",
+    "require-jsdoc": [
+      "warn",
+      {
+        "require": {
+          "FunctionDeclaration": false,
+          "MethodDefinition": true,
+          "ClassDeclaration": false,
+          "ArrowFunctionExpression": true,
+          "FunctionExpression": true
+        }
+      }
+    ],
+    "prefer-const": "warn",
+    "arrow-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "lines-around-comment": ["warn"]
+  }
+}
