@@ -1,0 +1,50 @@
+.timezone-dropdown {
+  display: inline-block;
+}
+
+.timezone-dropdown:hover {
+  border-color: #bbb;
+}
+
+.timezone-dropdown select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: border-color 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.timezone-dropdown select:focus {
+  outline: none;
+  border-color: #aaa;
+}
+
+.timezone-dropdown select option {
+  margin: 28px;
+}
+
+/* Style the default "Select a timezone..." option */
+.timezone-dropdown select option:first-child {
+  color: #999;
+}
+
+/* Style the default "Select a timezone..." option */
+.timezone-dropdown select option:nth-child(n) {
+  padding: 28px;
+}
+
+/* Style the dropdown arrow */
+.timezone-dropdown select::-ms-expand {
+  display: none;
+}
+
+.timezone-dropdown select::after {
+  content: "\25BC";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}

@@ -17,8 +17,17 @@
     "tsconfigRootDir": "__dirname"
   },
   "plugins": ["react-refresh", "prettier", "import"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
   "rules": {
     "import/no-unresolved": "error",
+    "no-shadow": "error",
+    "no-shadow-restricted-names": "error",
     "react-refresh/only-export-components": [
       "warn",
       { "allowConstantExport": true }
