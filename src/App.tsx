@@ -26,7 +26,6 @@ console.log(currentTimeZone);
 
 /** */
 const App = () => {
-  const [availableSlots, setAvailableSlots] = useState(AVAILABLE_SLOTS);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTimeSlot, setSelectedTimeSlot] = useState({} as TimeSlotInfo);
   const [selectedTimezone, setSelectedTimezone] = useState(currentTimeZone);
@@ -59,7 +58,7 @@ const App = () => {
       <SchedulingCalendar
         onDateChange={handleDateChange}
         calendarProps={calendarProps}
-        availableSlots={availableSlots}
+        availableSlots={AVAILABLE_SLOTS}
         onSlotChange={handleSlotChange}
         onTimeZoneChange={handleTimezoneChange}
         destinationTimezone={selectedTimezone}
