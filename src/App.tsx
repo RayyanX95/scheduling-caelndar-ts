@@ -86,7 +86,7 @@ const App = () => {
   console.log("selectedMultiDate", selectedMultiDate);
 
   return (
-    <div>
+    <div style={{ marginBottom: 100 }}>
       <Heading>Single-Select Calendar</Heading>
       <Container>
         <SchedulingCalendar
