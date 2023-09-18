@@ -82,6 +82,9 @@ const App = () => {
     maxDate: new Date("2023-10-30"),
   };
 
+  console.log("selectedDate", selectedDate);
+  console.log("selectedMultiDate", selectedMultiDate);
+
   return (
     <div>
       <Heading>Single-Select Calendar</Heading>
