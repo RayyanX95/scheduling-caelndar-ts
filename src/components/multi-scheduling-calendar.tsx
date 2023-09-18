@@ -2,24 +2,27 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./custom-styles.css";
 import styled from "styled-components";
-import AvailableTimeSlotsList from "./available-time-slots.tsx";
 import TimezoneDropdown from "./timezones-dropdown.tsx";
 import { AvailableTimeSlots } from "../types/slots.type.ts";
 import { ChangeEvent } from "react";
 import { TimeSlotInfo } from "../utils/slots.ts";
+import MultiAvailableTimeSlotsList from "./mult-available-time-slots.tsx";
 
 interface IProps {
   availableSlots: AvailableTimeSlots;
   calendarProps: object;
   destinationTimezone: string;
-  selectedTimeSlot: TimeSlotInfo;
-  onDateChange: (value: any, event: any) => void;
+  selectedTimeSlot: TimeSlotInfo[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onDateChange: (value: any) => void;
   onSlotChange: (slot: TimeSlotInfo) => void;
   onTimeZoneChange: (event: ChangeEvent<HTMLSelectElement>) => void;
 }
 
-/** */
-const SchedulingCalendar = ({
+/**
+ * Multi (select slot) scheduling calendar
+ */
+const MultiSchedulingCalendar = ({
   availableSlots,
   calendarProps,
   destinationTimezone,
@@ -40,17 +43,16 @@ const SchedulingCalendar = ({
         </DropdownContainer>
       </Grid>
 
-      <AvailableTimeSlotsList
+      <MultiAvailableTimeSlotsList
         availableSlots={availableSlots}
-        destinationTimezoneOffset={destinationTimezone}
         onSlotChange={onSlotChange}
-        selectedTimeSlot={selectedTimeSlot}
+        selectedTimeSlots={selectedTimeSlot}
       />
     </Container>
   );
 };
 
-export default SchedulingCalendar;
+export default MultiSchedulingCalendar;
 
 const Container = styled.div`
   display: flex;
