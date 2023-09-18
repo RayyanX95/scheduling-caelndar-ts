@@ -1,57 +1,79 @@
 import styled from "styled-components";
 import type { AvailableTimeSlots } from "../types/slots.type";
-import { convertTimeIntToItsCorrespondingSlotFormat } from "../utils/convert-slots";
 import { TimeSlotInfo } from "../utils/slots";
 
 interface IProps {
   availableSlots: AvailableTimeSlots;
-  destinationTimezoneOffset: string;
-  selectedTimeSlot: TimeSlotInfo;
+  selectedTimeSlots: TimeSlotInfo[];
   onSlotChange: (slot: TimeSlotInfo) => void;
 }
 
-/** */
-const AvailableTimeSlotsList = ({
+/**
+ * Multi (select) available time slots list
+ */
+const MultiAvailableTimeSlotsList = ({
   availableSlots,
-  destinationTimezoneOffset,
-  selectedTimeSlot,
+  selectedTimeSlots,
   onSlotChange,
 }: IProps) => {
-  /** */
-  const selectSlotHandler = (_selectedSlot: TimeSlotInfo) => {
-    onSlotChange(_selectedSlot);
+  // eslint-disable-next-line lines-around-comment
+  /**
+   * Select slot handler
+   */
+  const selectSlotHandler = (selectedSlot: TimeSlotInfo) => {
+    onSlotChange(selectedSlot);
+  };
+
+  /**
+   * Check if time slot is selected
+   * @param selectedTimeSlots selected multi-slots
+   * @param timeSlotRecord time slot record to check if selected
+   */
+  const isTimeSlotSelected = (timeSlotRecord: TimeSlotInfo) => {
+    const index = selectedTimeSlots.findIndex(
+      (slot) => slot.slot === timeSlotRecord.slot,
+    );
+
+    if (index !== -1) {
+      return true;
+    }
+
+    return false;
   };
 
   return (
     <SlotsContainer>
-      {availableSlots.slotsInfo.map((record) => (
-        <TimeItem
-          key={record.slot}
-          selected={selectedTimeSlot.slot === record.slot}
-          available={!!record.isAvailable}
-          onClick={() => selectSlotHandler(record)}
-          title={record.isAvailable ? "Available" : "Not Available"}
-        >
-          {convertTimeIntToItsCorrespondingSlotFormat(
-            record.slot,
-            destinationTimezoneOffset,
-          )}
-        </TimeItem>
-      ))}
+      {availableSlots.slotsInfo.map((record) => {
+        return (
+          <TimeItem
+            key={record.slot}
+            selected={isTimeSlotSelected(record)}
+            available={record.isAvailable}
+            onClick={() => selectSlotHandler(record)}
+            title={record.isAvailable ? "Available" : "Not Available"}
+          >
+            {record.slot}
+          </TimeItem>
+        );
+      })}
     </SlotsContainer>
   );
 };
 
-export default AvailableTimeSlotsList;
+export default MultiAvailableTimeSlotsList;
 
 const SlotsContainer = styled.div`
-  max-height: 22rem;
-  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: auto;
+  gap: 0.3rem;
+  overflow-x: auto;
   scroll-behavior: smooth;
-  padding-right: 2rem;
+  padding-right: 1rem;
 
   @media screen and ((min-width: 769px)) {
-    /* margin-left: 3rem; */
+    width: 400px;
   }
 
   /* scrollbar for webkit-based browsers (Chrome, Safari) */
@@ -84,7 +106,7 @@ const SlotsContainer = styled.div`
 `;
 
 const TimeItem = styled.button<{ selected: boolean; available: boolean }>`
-  width: 10rem;
+  width: 23%;
   height: 3rem;
   border-radius: 0.4rem;
   display: flex;
@@ -119,5 +141,9 @@ const TimeItem = styled.button<{ selected: boolean; available: boolean }>`
   &:hover {
     border-width: 3px;
     border-width: ${(props) => (props.available ? "3px" : "1px")};
+  }
+
+  @media screen and ((min-width: 769px)) {
+    width: 15%;
   }
 `;
