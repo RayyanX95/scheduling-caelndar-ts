@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import "./App.css";
@@ -9,6 +9,7 @@ import { AvailableTimeSlots } from "./types/slots.type";
 import { ChangeEvent } from "react";
 import moment from "moment-timezone";
 import MultiSchedulingCalendar from "./components/multi-scheduling-calendar";
+import { convertTimeFormatToNumber } from "./utils/convert-slots";
 
 const AVAILABLE_SLOTS: AvailableTimeSlots = {
   slotsInfo: [...TIME_SLOTS].slice(0, 12),
@@ -28,15 +29,17 @@ const MULTI_AVAILABLE_SLOTS: AvailableTimeSlots = {
 
 const currentTimeZone = moment.tz(moment.tz.guess()).format("Z");
 
-console.log(moment.tz.guess());
+console.log(moment.tz.guess(), currentTimeZone);
 
-console.log(currentTimeZone);
-
-/** */
+/**
+ * App Component
+ */
 const App = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedMultiDate, setSelectedMultiDate] = useState(new Date());
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState({} as TimeSlotInfo);
+  const [selectedTimeSlots, setSelectedTimeSlot] = useState(
+    [] as TimeSlotInfo[],
+  );
   const [selectedMultiTimeSlots, setSelectedMultiTimeSlots] = useState(
     [] as TimeSlotInfo[],
   );
@@ -46,12 +49,23 @@ const App = () => {
     setSelectedDate(date);
   };
 
-  const handleSingleSlotChange = (timeSlot: TimeSlotInfo) => {
-    if (!timeSlot.isAvailable) {
+  const handleSingleSlotChange = (newTimeSlot: TimeSlotInfo) => {
+    if (!newTimeSlot.isAvailable) {
       return;
     }
 
-    setSelectedTimeSlot(timeSlot);
+    if (selectedTimeSlots.length) {
+      const currSelectedSlotNum = convertTimeFormatToNumber(
+        selectedTimeSlots[0]?.slot,
+      );
+      const newSlotNumb = convertTimeFormatToNumber(newTimeSlot.slot);
+
+      if (Math.abs(currSelectedSlotNum - newSlotNumb) === 0.5) {
+        return setSelectedTimeSlot((timeSlot) => [...timeSlot, newTimeSlot]);
+      }
+    }
+
+    setSelectedTimeSlot([newTimeSlot]);
   };
 
   const handleMultiDateChange = (date: Date) => {
@@ -61,6 +75,18 @@ const App = () => {
   const handleMultiSlotChange = (timeSlot: TimeSlotInfo) => {
     if (!timeSlot.isAvailable) {
       return;
+    }
+
+    const index = selectedMultiTimeSlots.findIndex(
+      (record) => record.slot === timeSlot.slot,
+    );
+
+    if (index !== -1) {
+      const timeSlotsFilteredOutSelectedSlot = selectedMultiTimeSlots.filter(
+        (record) => record.slot !== timeSlot.slot,
+      );
+
+      return setSelectedMultiTimeSlots(timeSlotsFilteredOutSelectedSlot);
     }
 
     setSelectedMultiTimeSlots((multiTimeSlots) => [
@@ -82,8 +108,25 @@ const App = () => {
     maxDate: new Date("2023-10-30"),
   };
 
-  console.log("selectedDate", selectedDate);
-  console.log("selectedMultiDate", selectedMultiDate);
+  useEffect(() => {
+    const singleAvailableSlots = {
+      day: selectedDate,
+      slot: selectedTimeSlots.map((record) => record.slot),
+      timezone: selectedTimezone,
+    };
+
+    console.log("- singleAvailableSlots", singleAvailableSlots);
+  }, [selectedDate, selectedTimeSlots, selectedTimezone]);
+
+  useEffect(() => {
+    const multiAvailableSlots = {
+      day: selectedMultiDate,
+      slotsPerDay: selectedMultiTimeSlots.map((record) => record.slot),
+      timezone: selectedTimezone,
+    };
+
+    console.log("* multiAvailableSlots", multiAvailableSlots);
+  }, [selectedMultiDate, selectedMultiTimeSlots, selectedTimezone]);
 
   return (
     <div style={{ marginBottom: 100 }}>
@@ -96,7 +139,7 @@ const App = () => {
           onSlotChange={handleSingleSlotChange}
           onTimeZoneChange={handleTimezoneChange}
           destinationTimezone={selectedTimezone}
-          selectedTimeSlot={selectedTimeSlot}
+          selectedTimeSlot={selectedTimeSlots}
         />
         {/* <div>
         <h2>Selected Date:</h2>

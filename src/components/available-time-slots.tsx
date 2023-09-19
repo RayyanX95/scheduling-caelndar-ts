@@ -1,12 +1,15 @@
 import styled from "styled-components";
 import type { AvailableTimeSlots } from "../types/slots.type";
-import { convertTimeIntToItsCorrespondingSlotFormat } from "../utils/convert-slots";
+import {
+  adjustTimeSlotForGivenTimezoneOffset,
+  isTimeSlotSelected,
+} from "../utils/convert-slots";
 import { TimeSlotInfo } from "../utils/slots";
 
 interface IProps {
   availableSlots: AvailableTimeSlots;
   destinationTimezoneOffset: string;
-  selectedTimeSlot: TimeSlotInfo;
+  selectedTimeSlots: TimeSlotInfo[];
   onSlotChange: (slot: TimeSlotInfo) => void;
 }
 
@@ -14,25 +17,20 @@ interface IProps {
 const AvailableTimeSlotsList = ({
   availableSlots,
   destinationTimezoneOffset,
-  selectedTimeSlot,
+  selectedTimeSlots,
   onSlotChange,
 }: IProps) => {
-  /** */
-  const selectSlotHandler = (_selectedSlot: TimeSlotInfo) => {
-    onSlotChange(_selectedSlot);
-  };
-
   return (
     <SlotsContainer>
       {availableSlots.slotsInfo.map((record) => (
         <TimeItem
           key={record.slot}
-          selected={selectedTimeSlot.slot === record.slot}
+          selected={isTimeSlotSelected(record, selectedTimeSlots)}
           available={!!record.isAvailable}
-          onClick={() => selectSlotHandler(record)}
+          onClick={() => onSlotChange(record)}
           title={record.isAvailable ? "Available" : "Not Available"}
         >
-          {convertTimeIntToItsCorrespondingSlotFormat(
+          {adjustTimeSlotForGivenTimezoneOffset(
             record.slot,
             destinationTimezoneOffset,
           )}
@@ -49,10 +47,6 @@ const SlotsContainer = styled.div`
   overflow-y: auto;
   scroll-behavior: smooth;
   padding-right: 2rem;
-
-  @media screen and ((min-width: 769px)) {
-    /* margin-left: 3rem; */
-  }
 
   /* scrollbar for webkit-based browsers (Chrome, Safari) */
   &::-webkit-scrollbar {

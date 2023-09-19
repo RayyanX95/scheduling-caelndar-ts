@@ -90,10 +90,6 @@
   color: white;
 }
 
-.react-calendar__tile--active:enabled:hover {
-  background-color: #0056b3;
-}
-
 .react-calendar__month-view__weekdays__weekday abbr {
   text-decoration: none;
 }
