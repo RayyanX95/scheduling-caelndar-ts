@@ -12,8 +12,8 @@ interface IProps {
   availableSlots: AvailableTimeSlots;
   calendarProps: object;
   destinationTimezone: string;
-  selectedTimeSlot: TimeSlotInfo;
-  onDateChange: (value: any, event: any) => void;
+  selectedTimeSlot: TimeSlotInfo[];
+  onDateChange: (value: any) => void;
   onSlotChange: (slot: TimeSlotInfo) => void;
   onTimeZoneChange: (event: ChangeEvent<HTMLSelectElement>) => void;
 }
@@ -23,7 +23,7 @@ const SchedulingCalendar = ({
   availableSlots,
   calendarProps,
   destinationTimezone,
-  selectedTimeSlot,
+  selectedTimeSlot: selectedTimeSlots,
   onDateChange,
   onSlotChange,
   onTimeZoneChange,
@@ -44,7 +44,7 @@ const SchedulingCalendar = ({
         availableSlots={availableSlots}
         destinationTimezoneOffset={destinationTimezone}
         onSlotChange={onSlotChange}
-        selectedTimeSlot={selectedTimeSlot}
+        selectedTimeSlots={selectedTimeSlots}
       />
     </Container>
   );

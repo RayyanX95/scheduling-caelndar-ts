@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import type { AvailableTimeSlots } from "../types/slots.type";
 import { TimeSlotInfo } from "../utils/slots";
+import { isTimeSlotSelected } from "../utils/convert-slots";
 
 interface IProps {
   availableSlots: AvailableTimeSlots;
@@ -24,30 +25,13 @@ const MultiAvailableTimeSlotsList = ({
     onSlotChange(selectedSlot);
   };
 
-  /**
-   * Check if time slot is selected
-   * @param selectedTimeSlots selected multi-slots
-   * @param timeSlotRecord time slot record to check if selected
-   */
-  const isTimeSlotSelected = (timeSlotRecord: TimeSlotInfo) => {
-    const index = selectedTimeSlots.findIndex(
-      (slot) => slot.slot === timeSlotRecord.slot,
-    );
-
-    if (index !== -1) {
-      return true;
-    }
-
-    return false;
-  };
-
   return (
     <SlotsContainer>
       {availableSlots.slotsInfo.map((record) => {
         return (
           <TimeItem
             key={record.slot}
-            selected={isTimeSlotSelected(record)}
+            selected={isTimeSlotSelected(record, selectedTimeSlots)}
             available={record.isAvailable}
             onClick={() => selectSlotHandler(record)}
             title={record.isAvailable ? "Available" : "Not Available"}
